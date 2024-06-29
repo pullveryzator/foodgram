@@ -27,7 +27,7 @@ class MyUser(AbstractUser):
                    'цифры и @/./+/-/_'),
         validators=[UnicodeUsernameValidator(),],
         error_messages={
-            'unique': "Пользователь с таким именем уже существует.",
+            'unique': 'Пользователь с таким именем уже существует.',
         },
     )
     first_name = models.CharField(
@@ -75,6 +75,8 @@ class Subscribe(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'subscriptions'],
@@ -84,7 +86,4 @@ class Subscribe(models.Model):
 
     def clean(self):
         if self.user == self.subscriptions:
-            raise ValidationError("Нельзя подписаться на самого себя.")
-
-    def __str__(self):
-        return self.user
+            raise ValidationError('Нельзя подписаться на самого себя.')

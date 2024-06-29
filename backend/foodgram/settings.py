@@ -96,9 +96,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ),
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
@@ -109,9 +109,7 @@ REST_FRAMEWORK = {
 DJOSER = {
     'SERIALIZERS': {
         'current_user': 'users.serializers.MyUserSerializer',
-    #  'user_create': 'users.serializers.MyUserSerializer',
         'user': 'users.serializers.MyUserSerializer',
-    #     'messages': 'djoser.constants.Messages'
     },
 
     'PERMISSIONS': {

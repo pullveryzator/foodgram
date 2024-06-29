@@ -5,7 +5,7 @@ from recipes.models import Ingredient, Recipe, Tag, ShoppingCart
 from users.serializers import MyUserSerializer
 
 
-class IngredientSerializer(ModelSerializer):
+class IngredientRecordSerializer(ModelSerializer):
     amount = SerializerMethodField(read_only=True)
 
     def get_amount(self, obj):
@@ -14,6 +14,13 @@ class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit', 'amount',)
+
+
+class IngredientReadSerializer(ModelSerializer):
+
+    class Meta:
+        model = Ingredient
+        fields = ('id', 'name', 'measurement_unit',)
 
 
 class TagSerializer(ModelSerializer):
@@ -26,7 +33,7 @@ class TagSerializer(ModelSerializer):
 class RecipeSerializer(ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     author = MyUserSerializer(read_only=True)
-    ingredients = IngredientSerializer(many=True, read_only=True)
+    ingredients = IngredientRecordSerializer(many=True, read_only=True)
     is_favorite = SerializerMethodField(read_only=True)
     is_in_shopping_cart = SerializerMethodField(read_only=True)
 
