@@ -10,7 +10,6 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from .serializers import (
     MyUserSerializer, AvatarSerializer,
-    # SubscribeReadSerializer, SubscribeRecordSerializer,
     SubscribeSerializer
 )
 from users.models import Subscribe
