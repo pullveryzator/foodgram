@@ -8,7 +8,7 @@ from .serializers import (
     TagSerializer, ShoppingCartSerializer
 )
 
-from recipes.models import Ingredient, Recipe, Tag
+from recipes.models import Ingredient, Recipe, ShoppingCart, Tag
 from api.filters import RecipeFilter, IngredientFilter
 
 
@@ -24,8 +24,6 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    # permission_classes = (IsAuthenticatedOrReadOnly,)
-    # serializer_class = RecipeReadSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
@@ -56,4 +54,5 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class ShoppingCartViewSet(viewsets.ModelViewSet):
+    queryset = ShoppingCart.objects.all()
     serializer_class = ShoppingCartSerializer

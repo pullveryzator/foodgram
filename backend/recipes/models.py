@@ -43,6 +43,7 @@ class Tag(models.Model):
         max_length=MAX_LENGTH_FOR_NAME)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -104,6 +105,7 @@ class Recipe(models.Model):
 class IngredientInRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
+        related_name='ingredients_list',
         verbose_name='Ингредиент',
         on_delete=models.CASCADE
     )
@@ -150,6 +152,7 @@ class Favorite(models.Model):
     )
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
         constraints = [
@@ -177,6 +180,7 @@ class ShoppingCart(models.Model):
     )
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Корзина покупок'
         verbose_name_plural = 'Корзина покупок'
         constraints = [
