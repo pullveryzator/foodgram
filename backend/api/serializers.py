@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -14,7 +15,6 @@ class IngredientForRecipeReadSerializer(ModelSerializer):
     amount = SerializerMethodField(read_only=True)
 
     def get_amount(self, obj):
-        # print(obj.ingredients_list.last().amount)
         amount = obj.ingredients_list.last().amount
         return amount
 
@@ -81,10 +81,27 @@ class RecipeRecordSerializer(ModelSerializer):
             raise ValidationError(message='Поле image не может быть пустым.')
         return value
 
+    def validate_tags(self, value):
+        tags = value
+        if not tags:
+            raise ValidationError('Нужен хотя бы один тег.')
+        if len(tags) != len(set(tags)):
+            raise ValidationError('Теги должны быть уникальными.')
+        return value
+
+    def validate_ingredients(self, value):
+        ingredients = value
+        if not ingredients:
+            raise ValidationError('Нужен хотя бы один ингредиент.')
+        unique_values = set([ingredient['id'] for ingredient in ingredients])
+        if len(unique_values) != len(ingredients):
+            raise ValidationError('Ингредиенты должны быть уникальными.')
+        return value
+
     def create_ingredients_amounts(self, ingredients, recipe):
         IngredientInRecipe.objects.bulk_create(
             [IngredientInRecipe(
-                ingredient=Ingredient.objects.get(id=ingredient['id']),
+                ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
                 recipe=recipe,
                 amount=ingredient['amount'],
             ) for ingredient in ingredients]
@@ -97,14 +114,6 @@ class RecipeRecordSerializer(ModelSerializer):
         recipe.tags.set(tags)
         self.create_ingredients_amounts(recipe=recipe, ingredients=ingredients)
         return recipe
-
-    def validate_tags(self, value):
-        tags = value
-        if not tags:
-            raise ValidationError('Нужен хотя бы один тег.')
-        if len(tags) != len(set(tags)):
-            raise ValidationError('Теги должны быть уникальными.')
-        return value
 
     def to_representation(self, instance):
         request = self.context.get('request')
