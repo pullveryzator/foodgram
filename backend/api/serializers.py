@@ -1,11 +1,12 @@
-from django.db.models import F
 from django.core.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.fields import SerializerMethodField, IntegerField
 from drf_extra_fields.fields import Base64ImageField
 
-from recipes.models import Ingredient, IngredientInRecipe, Recipe, Tag, ShoppingCart
+from recipes.models import (
+    Ingredient, IngredientInRecipe, Recipe, Tag, ShoppingCart
+)
 from users.serializers import MyUserSerializer
 
 
