@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
+from rest_framework.pagination import LimitOffsetPagination
 from .permissions import IsAuthenticatedOrReadOnly
 from .serializers import (
     IngredientSerializer, RecipeReadSerializer, RecipeRecordSerializer,
@@ -26,6 +26,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
+    pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -33,14 +34,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
             return RecipeReadSerializer
-        elif self.action in ['create', 'partial_update', 'destroy']:
+        elif self.action in ['create', 'update', 'partial_update', 'destroy']:
             return RecipeRecordSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return (AllowAny(),)
-        elif self.action in ['create', 'partial_update', 'destroy']:
+        elif self.action in ['create', 'update', 'partial_update', 'destroy']:
             return (IsAuthenticatedOrReadOnly(),)
         return super().get_permissions()
 

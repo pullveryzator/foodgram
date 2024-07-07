@@ -1,5 +1,8 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.db.transaction import atomic
 from django.core.exceptions import ValidationError
+from rest_framework import status
 from rest_framework.serializers import ModelSerializer
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.fields import SerializerMethodField, IntegerField
@@ -76,44 +79,101 @@ class RecipeRecordSerializer(ModelSerializer):
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
     image = Base64ImageField(required=True)
 
+    def validate(self, data):
+        request_method = self.context['request'].method
+        required_fields = (
+            'ingredients', 'tags',
+            'image', 'name',
+            'text', 'cooking_time'
+        )
+        if request_method in ('PATCH', 'POST'):
+            for field in required_fields:
+                if field not in data:
+                    raise ValidationError(
+                        message=f'Поле {field} обязательно в запросе.',
+                        code=status.HTTP_400_BAD_REQUEST
+                    )
+            return data
+
     def validate_image(self, value):
         if not value:
-            raise ValidationError(message='Поле image не может быть пустым.')
+            raise ValidationError(
+                message='Поле image не может быть пустым.',
+                code=status.HTTP_400_BAD_REQUEST
+            )
         return value
 
     def validate_tags(self, value):
         tags = value
         if not tags:
-            raise ValidationError('Нужен хотя бы один тег.')
+            raise ValidationError(
+                message='Нужен хотя бы один тег.',
+                code=status.HTTP_400_BAD_REQUEST
+            )
         if len(tags) != len(set(tags)):
-            raise ValidationError('Теги должны быть уникальными.')
+            raise ValidationError(
+                message='Теги должны быть уникальными.',
+                code=status.HTTP_400_BAD_REQUEST
+            )
         return value
 
     def validate_ingredients(self, value):
         ingredients = value
         if not ingredients:
-            raise ValidationError('Нужен хотя бы один ингредиент.')
+            raise ValidationError(
+                message='Нужен хотя бы один ингредиент.',
+                code=status.HTTP_400_BAD_REQUEST
+            )
         unique_values = set([ingredient['id'] for ingredient in ingredients])
         if len(unique_values) != len(ingredients):
-            raise ValidationError('Ингредиенты должны быть уникальными.')
+            raise ValidationError(
+                message='Ингредиенты должны быть уникальными.',
+                code=status.HTTP_400_BAD_REQUEST
+            )
+        for ingredient in ingredients:
+            object = Ingredient.objects.filter(id=ingredient['id'])
+            if not object.exists():
+                raise ValidationError(
+                    message=f'Ингредиент {ingredient["id"]} не существует.',
+                    code=status.HTTP_400_BAD_REQUEST
+                )
         return value
 
-    def create_ingredients_amounts(self, ingredients, recipe):
-        IngredientInRecipe.objects.bulk_create(
-            [IngredientInRecipe(
-                ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
+    @atomic
+    def create_ingredients_in_recipe(self, ingredients, recipe):
+        for ingredient in ingredients:
+            value = Ingredient.objects.filter(id=ingredient['id'])
+            IngredientInRecipe.objects.create(
+                ingredient=value.get(id=ingredient['id']),
                 recipe=recipe,
-                amount=ingredient['amount'],
-            ) for ingredient in ingredients]
-        )
+                amount=ingredient['amount']
+            )
 
+    @atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-        self.create_ingredients_amounts(recipe=recipe, ingredients=ingredients)
+        self.create_ingredients_in_recipe(
+            ingredients=ingredients,
+            recipe=recipe
+        )
         return recipe
+
+    @atomic
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
+        instance.tags.clear()
+        instance.tags.set(tags)
+        instance.ingredients.clear()
+        self.create_ingredients_in_recipe(
+            ingredients=ingredients,
+            recipe=instance
+        )
+        instance.save()
+        return instance
 
     def to_representation(self, instance):
         request = self.context.get('request')
