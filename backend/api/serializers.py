@@ -119,6 +119,13 @@ class RecipeRecordSerializer(ModelSerializer):
 
     def validate_ingredients(self, value):
         ingredients = value
+        for ingredient in ingredients:
+            object = Ingredient.objects.filter(id=ingredient['id'])
+            if not object.exists():
+                raise ValidationError(
+                    message=f'Ингредиент {ingredient["id"]} не существует.',
+                    code=status.HTTP_400_BAD_REQUEST
+                )
         if not ingredients:
             raise ValidationError(
                 message='Нужен хотя бы один ингредиент.',
@@ -130,13 +137,6 @@ class RecipeRecordSerializer(ModelSerializer):
                 message='Ингредиенты должны быть уникальными.',
                 code=status.HTTP_400_BAD_REQUEST
             )
-        for ingredient in ingredients:
-            object = Ingredient.objects.filter(id=ingredient['id'])
-            if not object.exists():
-                raise ValidationError(
-                    message=f'Ингредиент {ingredient["id"]} не существует.',
-                    code=status.HTTP_400_BAD_REQUEST
-                )
         return value
 
     @atomic
