@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.pagination import LimitOffsetPagination
-from .permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsAuthenticatedOrReadOnly, CurrentUserOrAdminOrReadOnly
 from .serializers import (
     IngredientSerializer, RecipeReadSerializer, RecipeRecordSerializer,
     TagSerializer, ShoppingCartSerializer
@@ -42,7 +42,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return (AllowAny(),)
         elif self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return (IsAuthenticatedOrReadOnly(),)
+            return (CurrentUserOrAdminOrReadOnly(),)
         return super().get_permissions()
 
 
