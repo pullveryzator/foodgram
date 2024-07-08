@@ -1,5 +1,3 @@
-from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.db.transaction import atomic
 from django.core.exceptions import ValidationError
 from rest_framework import status
