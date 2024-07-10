@@ -10,7 +10,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.status import (
-    HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
+    HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND
 )
 from .permissions import CurrentUserOrAdminOrReadOnly, CurrentUserOrAdmin
 from .serializers import (
@@ -98,8 +99,7 @@ class RecipeViewSet(ModelViewSet):
     def add_recipe_to(self, model, user, pk):
         if model.objects.filter(user=user, recipes_id=pk).exists():
             return Response(
-                {'errors': f'Рецепт {pk} уже добавлен.'},
-                exception=True,
+                {'errors': f'Рецепт {pk} в {model.__name__} уже добавлен.'},
                 status=HTTP_400_BAD_REQUEST
             )
         recipe = get_object_or_404(Recipe, pk=pk)
@@ -108,9 +108,14 @@ class RecipeViewSet(ModelViewSet):
         return Response(serializer.data, status=HTTP_201_CREATED)
 
     def delete_recipe_from(self, model, user, pk):
+        if not Recipe.objects.filter(pk=pk).exists():
+            return Response(
+                {'errors': f'Рецепта {pk} в базе данных не cуществует.'},
+                status=HTTP_404_NOT_FOUND
+            )
         if not model.objects.filter(user=user, recipes_id=pk).exists():
             return Response(
-                {'errors': f'Рецепт {pk} не существует.'},
+                {'errors': f'Рецепта {pk} в {model.__name__} нет.'},
                 status=HTTP_400_BAD_REQUEST
             )
         object = get_object_or_404(model, user=user, recipes_id=pk)
