@@ -1,5 +1,5 @@
 from rest_framework. permissions import (
-    BasePermission, IsAuthenticatedOrReadOnly, SAFE_METHODS,)
+    BasePermission, IsAuthenticatedOrReadOnly, IsAuthenticated, SAFE_METHODS,)
 
 
 class IsAdminOrReadOnly(BasePermission):
@@ -22,3 +22,9 @@ class CurrentUserOrAdminOrReadOnly(IsAuthenticatedOrReadOnly):
         return (request.method in SAFE_METHODS
                 or request.user.is_staff
                 or obj.author == request.user)
+
+
+class CurrentUserOrAdmin(IsAuthenticated):
+
+    def has_object_permission(self, request, view, obj):
+        return (request.user.is_staff or obj.author == request.user)

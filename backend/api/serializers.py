@@ -7,7 +7,7 @@ from rest_framework.fields import SerializerMethodField, IntegerField
 from drf_extra_fields.fields import Base64ImageField
 
 from recipes.models import (
-    Ingredient, IngredientInRecipe, Recipe, Tag, ShoppingCart
+    Ingredient, IngredientInRecipe, Recipe, Tag
 )
 from users.serializers import MyUserSerializer
 
@@ -187,8 +187,8 @@ class RecipeRecordSerializer(ModelSerializer):
         )
 
 
-class ShoppingCartSerializer(ModelSerializer):
+class RecipeSimpleSerializer(ModelSerializer):
 
     class Meta:
-        model = ShoppingCart
-        fields = ('user', 'recipes',)
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')

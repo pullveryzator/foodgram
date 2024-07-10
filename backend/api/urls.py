@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    IngredientViewSet, RecipeViewSet, TagViewSet, ShoppingCartViewSet,
+    IngredientViewSet, RecipeViewSet, TagViewSet
 )
 
 app_name = 'api'
@@ -15,7 +15,4 @@ router.register('recipes', RecipeViewSet, basename='recipes')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('recipes/download_shopping_cart/', ShoppingCartViewSet.as_view(
-        {'get': 'list', 'post': 'partial_update', 'del': 'partial_update'}
-    ))
 ]

@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import Ingredient, IngredientInRecipe, Recipe, Tag
+from .models import (
+    Ingredient, IngredientInRecipe, Recipe,
+    Tag, ShoppingCart, Favorite
+)
 
 
 class IngredientInline(admin.TabularInline):
@@ -16,6 +19,22 @@ class IngredientAdmin(admin.ModelAdmin):
     list_per_page = 15
     list_display_links = ('name',)
     inlines = (IngredientInline,)
+
+
+class FavoriteAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'user',
+        'recipes',
+    )
+
+
+class ShoppingCartAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'user',
+        'recipes',
+    )
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -45,3 +64,5 @@ admin.site.site_title = 'Foodgram'
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(ShoppingCart, ShoppingCartAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
