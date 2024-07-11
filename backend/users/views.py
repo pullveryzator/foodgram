@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
 from django.shortcuts import get_object_or_404
-from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -57,7 +57,13 @@ class MyUserViewSet(UserViewSet):
         user = request.user
         subscriptions_id = self.kwargs.get('id')
         subscriptions = get_object_or_404(User, id=subscriptions_id)
-
+        to_subscribe = Subscribe.objects.filter(
+                subscriptions=subscriptions, user=user).exists()
+        if request.method == 'DELETE' and not to_subscribe:
+            return Response(
+                f'Вы уже отписаны от {subscriptions}.',
+                status=HTTP_400_BAD_REQUEST
+            )
         if request.method == 'POST':
             serializer = SubscribeSerializer(
                 subscriptions,
