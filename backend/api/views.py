@@ -1,4 +1,6 @@
-from django.http import HttpResponseRedirect
+from io import BytesIO
+from django.db.models import Sum
+from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import baseconv
@@ -124,11 +126,24 @@ class RecipeViewSet(ModelViewSet):
 
     @action(
         methods=['get',],
-        detail=True,
+        detail=False,
         permission_classes=[CurrentUserOrAdmin,]
     )
-    def download_shopping_cart(self, request, user):
-        return Response('Vot tvoi spisok pokupok s@ka.')
+    def download_shopping_cart(self, request):
+        user = request.user
+        shopping_cart = ShoppingCart.objects.filter(
+            user=user).values(
+                'recipes__ingredients__name').annotate(
+                    amount=Sum('recipes__ingredients_list__amount')).order_by(
+                        'recipes__ingredients__name'
+                    )
+        print(shopping_cart)
+        # file = BytesIO()
+        return FileResponse(
+            f'Vot tvoi spisok pokupok {user}.',
+            content_type='text/plain',
+            as_attachment=True,
+            filename=f'{user}_to_shop.')
 
 
 class TagViewSet(ModelViewSet):

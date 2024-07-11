@@ -3,3 +3,4 @@ djangorestframework==3.15.1
 djoser==2.2.3
 Pillow==9.3.0
 django-filter==23.1
+reportlab==4.2.2
