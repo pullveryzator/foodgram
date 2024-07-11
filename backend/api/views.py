@@ -79,7 +79,6 @@ class RecipeViewSet(ModelViewSet):
     @action(
         methods=['post', 'delete',],
         detail=True,
-        permission_classes=[CurrentUserOrAdmin,]
     )
     def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
@@ -90,7 +89,6 @@ class RecipeViewSet(ModelViewSet):
     @action(
         methods=['post', 'delete',],
         detail=True,
-        permission_classes=[CurrentUserOrAdmin,]
     )
     def favorite(self, request, pk=None):
         if request.method == 'POST':
@@ -151,7 +149,8 @@ class RecipeViewSet(ModelViewSet):
             file,
             content_type='text/plain',
             as_attachment=True,
-            filename=f'{user}_go_to_shop.txt')
+            filename=f'{user}_go_to_shop.txt'
+        )
 
 
 class TagViewSet(ModelViewSet):

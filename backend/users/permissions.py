@@ -1,23 +1,8 @@
 from rest_framework.permissions import (
-    BasePermission,
+    IsAuthenticated,
     IsAuthenticatedOrReadOnly,
     SAFE_METHODS
 )
-
-
-class UserPermission(BasePermission):
-    def has_permission(self, request, view):
-        if view.action in ['retrieve', 'list', 'create', 'partial_update']:
-            return True
-        else:
-            return False
-
-
-class IsAuthorOrAdminPermission(BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        """Object permissions."""
-        return (request.user.is_staff or obj.username == request.user)
 
 
 class CurrentUserOrAdminOrReadOnly(IsAuthenticatedOrReadOnly):
@@ -26,3 +11,9 @@ class CurrentUserOrAdminOrReadOnly(IsAuthenticatedOrReadOnly):
         if type(obj) is type(user) and obj == user:
             return True
         return request.method in SAFE_METHODS or user.is_staff
+
+
+class CurrentUserOrAdmin(IsAuthenticated):
+
+    def has_object_permission(self, request, view, obj):
+        return (request.user.is_staff or obj.author == request.user)

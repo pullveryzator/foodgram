@@ -3,11 +3,10 @@ from djoser.views import UserViewSet
 from django.shortcuts import get_object_or_404
 from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 
-
+from .permissions import CurrentUserOrAdmin
 from .serializers import (
     MyUserSerializer, AvatarSerializer,
     SubscribeSerializer
@@ -23,14 +22,14 @@ class MyUserViewSet(UserViewSet):
 
     def get_permissions(self):
         if self.action == 'me':
-            return (IsAuthenticated(),)
+            return (CurrentUserOrAdmin(),)
         return super().get_permissions()
 
     @action(
         ['put'],
         detail=False,
         url_path='me/avatar',
-        permission_classes=(IsAuthenticated,),
+        permission_classes=(CurrentUserOrAdmin,),
         serializer_class=AvatarSerializer,
     )
     def avatar(self, request):
@@ -52,7 +51,7 @@ class MyUserViewSet(UserViewSet):
         ['post', 'delete'],
         detail=True,
         url_path='subscribe',
-        permission_classes=(IsAuthenticated,)
+        permission_classes=(CurrentUserOrAdmin,)
     )
     def subscribe(self, request, **kwargs):
         user = request.user
@@ -80,7 +79,7 @@ class MyUserViewSet(UserViewSet):
 
     @action(
         ['get'],
-        permission_classes=(IsAuthenticated,),
+        permission_classes=(CurrentUserOrAdmin,),
         url_path='subscriptions',
         detail=False
     )
