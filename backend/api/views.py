@@ -133,14 +133,22 @@ class RecipeViewSet(ModelViewSet):
         user = request.user
         shopping_cart = ShoppingCart.objects.filter(
             user=user).values(
-                'recipes__ingredients__name').annotate(
+                'recipes__ingredients__name',
+                'recipes__ingredients__measurement_unit').annotate(
                     amount=Sum('recipes__ingredients_list__amount')).order_by(
                         'recipes__ingredients__name'
                     )
         print(shopping_cart)
-        # file = BytesIO()
+        file = BytesIO()
+        for ingredient in shopping_cart:
+            file.write(
+                f"{ingredient['recipes__ingredients__name']}: "
+                f"{ingredient['amount']} "
+                f"{ingredient['recipes__ingredients__measurement_unit']}\n".encode('utf-8')
+            )
+        file.seek(0)
         return FileResponse(
-            f'Vot tvoi spisok pokupok {user}.',
+            file,
             content_type='text/plain',
             as_attachment=True,
             filename=f'{user}_to_shop.')
