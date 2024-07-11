@@ -137,21 +137,21 @@ class RecipeViewSet(ModelViewSet):
                 'recipes__ingredients__measurement_unit').annotate(
                     amount=Sum('recipes__ingredients_list__amount')).order_by(
                         'recipes__ingredients__name'
-                    )
-        print(shopping_cart)
+        )
         file = BytesIO()
         for ingredient in shopping_cart:
             file.write(
                 f"{ingredient['recipes__ingredients__name']}: "
                 f"{ingredient['amount']} "
-                f"{ingredient['recipes__ingredients__measurement_unit']}\n".encode('utf-8')
+                f"{ingredient['recipes__ingredients__measurement_unit']}\n"
+                .encode('utf-8')
             )
         file.seek(0)
         return FileResponse(
             file,
             content_type='text/plain',
             as_attachment=True,
-            filename=f'{user}_to_shop.')
+            filename=f'{user}_go_to_shop.txt')
 
 
 class TagViewSet(ModelViewSet):
@@ -170,6 +170,6 @@ class ShortLinkView(APIView):
         recipe = get_object_or_404(Recipe, id=decoded_id)
         return HttpResponseRedirect(
             request.build_absolute_uri(
-                    f'/api/recipes/{recipe.id}/'
-                ), status=HTTP_200_OK
+                f'/api/recipes/{recipe.id}/'
+            ), status=HTTP_200_OK
         )

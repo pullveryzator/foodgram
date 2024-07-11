@@ -6,7 +6,7 @@ from .constants import (
     MIN_COOKING_TIME,
     MAX_LENGTH_FOR_NAME,
     MIN_AMOUNT_OF_INGREDIENT
-    )
+)
 
 User = get_user_model()
 
