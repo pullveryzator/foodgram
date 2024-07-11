@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -46,7 +46,7 @@ class MyUserViewSet(UserViewSet):
     def delete_avatar(self, request):
         if request.user.avatar:
             request.user.avatar.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=HTTP_204_NO_CONTENT)
 
     @action(
         ['post', 'delete'],
@@ -67,16 +67,16 @@ class MyUserViewSet(UserViewSet):
             )
             serializer.is_valid(raise_exception=True)
             Subscribe.objects.create(user=user, subscriptions=subscriptions)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=HTTP_201_CREATED)
 
         if request.method == 'DELETE':
-            subscriptions = get_object_or_404(
+            subscribe = get_object_or_404(
                 Subscribe,
                 user=user,
                 subscriptions=subscriptions
             )
-            subscriptions.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            subscribe.delete()
+            return Response(status=HTTP_204_NO_CONTENT)
 
     @action(
         ['get'],
