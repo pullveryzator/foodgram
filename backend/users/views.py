@@ -57,13 +57,6 @@ class MyUserViewSet(UserViewSet):
         user = request.user
         subscriptions_id = self.kwargs.get('id')
         subscriptions = get_object_or_404(User, id=subscriptions_id)
-        to_subscribe = Subscribe.objects.filter(
-                subscriptions=subscriptions, user=user).exists()
-        if request.method == 'DELETE' and not to_subscribe:
-            return Response(
-                f'Вы уже отписаны от {subscriptions}.',
-                status=HTTP_400_BAD_REQUEST
-            )
         if request.method == 'POST':
             serializer = SubscribeSerializer(
                 subscriptions,
@@ -73,14 +66,15 @@ class MyUserViewSet(UserViewSet):
             serializer.is_valid(raise_exception=True)
             Subscribe.objects.create(user=user, subscriptions=subscriptions)
             return Response(serializer.data, status=HTTP_201_CREATED)
-
         if request.method == 'DELETE':
-            subscribe = get_object_or_404(
-                Subscribe,
-                user=user,
-                subscriptions=subscriptions
-            )
-            subscribe.delete()
+            to_subscribe = Subscribe.objects.filter(
+                subscriptions=subscriptions, user=user)
+            if not to_subscribe.exists():
+                return Response(
+                    f'Вы уже отписаны от {subscriptions}.',
+                    status=HTTP_400_BAD_REQUEST
+                )
+            to_subscribe.delete()
             return Response(status=HTTP_204_NO_CONTENT)
 
     @action(
