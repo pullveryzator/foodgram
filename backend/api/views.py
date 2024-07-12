@@ -170,5 +170,5 @@ class ShortLinkView(APIView):
         return HttpResponseRedirect(
             request.build_absolute_uri(
                 f'/api/recipes/{recipe.id}/'
-            ), status=HTTP_200_OK
+            )
         )
