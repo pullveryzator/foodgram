@@ -12,19 +12,19 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
-    build: pullveryzator/foodgram_backend
+    image: pullveryzator/foodgram_backend
     env_file: .env
     volumes:
       - static:/backend_static
       - media:/media
   frontend:
     env_file: .env
-    build: pullveryzator/foodgram_frontend
+    image: pullveryzator/foodgram_frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
   gateway:
-    build: pullveryzator/foodgram_gateway
+    image: pullveryzator/foodgram_gateway
     env_file: .env
     ports:
       - 9500:80
