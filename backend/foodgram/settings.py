@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from .debug_flag import debug_flag
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,10 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p*zdi6@91s%ithuy2ui5v+cwwl(#d9ku4d_6zf^7wtt9bs92)k'
+SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = debug_flag
 
 ALLOWED_HOSTS = []
 
