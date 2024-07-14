@@ -169,6 +169,6 @@ class ShortLinkView(APIView):
         recipe = get_object_or_404(Recipe, id=decoded_id)
         return HttpResponseRedirect(
             request.build_absolute_uri(
-                f'/api/recipes/{recipe.id}/'
+                f'/recipes/{recipe.id}/'
             )
         )
