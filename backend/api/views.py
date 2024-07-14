@@ -162,6 +162,7 @@ class TagViewSet(ModelViewSet):
 
 
 class ShortLinkView(APIView):
+    '''Представление для работы с короткой ссылкой.'''
     permission_classes = (AllowAny,)
 
     def get(self, request, encoded_id):
