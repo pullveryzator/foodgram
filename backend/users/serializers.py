@@ -13,6 +13,7 @@ User = get_user_model()
 
 
 class MyUserSerializer(UserSerializer):
+    '''Сериализатор для пользователей.'''
     is_subscribed = SerializerMethodField(read_only=True)
 
     def get_is_subscribed(self, obj):
@@ -32,6 +33,7 @@ class MyUserSerializer(UserSerializer):
 
 
 class AvatarSerializer(ModelSerializer):
+    '''Сериализатор для аватаров.'''
     avatar = Base64ImageField(required=True)
 
     class Meta:
@@ -45,6 +47,7 @@ class AvatarSerializer(ModelSerializer):
 
 
 class RecipeForSubscriptionSerializer(ModelSerializer):
+    '''Сериализатор для рецептов пользователей-авторов.'''
 
     class Meta:
         model = Recipe
@@ -52,6 +55,7 @@ class RecipeForSubscriptionSerializer(ModelSerializer):
 
 
 class SubscribeSerializer(MyUserSerializer):
+    '''Сериализатор для подписок.'''
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
 

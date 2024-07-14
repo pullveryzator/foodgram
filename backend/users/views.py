@@ -16,6 +16,7 @@ User = get_user_model()
 
 
 class MyUserViewSet(UserViewSet):
+    '''Представление для пользователей.'''
     serializer_class = MyUserSerializer
     pagination_class = LimitOffsetPagination
 

@@ -11,6 +11,7 @@ from users.serializers import MyUserSerializer
 
 
 class IngredientForRecipeReadSerializer(ModelSerializer):
+    '''Сериализатор для чтения отдельного ингредиента в рецепте.'''
     amount = SerializerMethodField(read_only=True)
 
     def get_amount(self, obj):
@@ -23,6 +24,7 @@ class IngredientForRecipeReadSerializer(ModelSerializer):
 
 
 class IngredientForRecipeRecordSerializer(ModelSerializer):
+    '''Сериализатор для записи отдельного ингредиента в рецепт.'''
     id = IntegerField(write_only=True)
 
     class Meta:
@@ -31,6 +33,7 @@ class IngredientForRecipeRecordSerializer(ModelSerializer):
 
 
 class IngredientSerializer(ModelSerializer):
+    '''Базовый сериализатор для ингредиентов.'''
 
     class Meta:
         model = Ingredient
@@ -38,6 +41,7 @@ class IngredientSerializer(ModelSerializer):
 
 
 class TagSerializer(ModelSerializer):
+    '''Сериализатор для тегов.'''
 
     class Meta:
         model = Tag
@@ -45,6 +49,7 @@ class TagSerializer(ModelSerializer):
 
 
 class RecipeReadSerializer(ModelSerializer):
+    '''Сериализатор для чтения рецептов.'''
     tags = TagSerializer(many=True, read_only=True)
     author = MyUserSerializer(read_only=True)
     ingredients = IngredientForRecipeReadSerializer(many=True, read_only=True)
@@ -76,6 +81,7 @@ class RecipeReadSerializer(ModelSerializer):
 
 
 class RecipeRecordSerializer(ModelSerializer):
+    '''Сериализатор для записи рецептов.'''
     author = MyUserSerializer(read_only=True)
     ingredients = IngredientForRecipeRecordSerializer(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
@@ -192,6 +198,7 @@ class RecipeRecordSerializer(ModelSerializer):
 
 
 class RecipeSimpleSerializer(ModelSerializer):
+    '''Базовый сериализатор для рецептов.'''
 
     class Meta:
         model = Recipe

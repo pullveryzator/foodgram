@@ -25,6 +25,7 @@ from .serializers import (IngredientSerializer, RecipeReadSerializer,
 
 
 class IngredientViewSet(ModelViewSet):
+    '''Представление для работы с ингредиентами.'''
     queryset = Ingredient.objects.all()
     http_method_names = ['get',]
     permission_classes = (AllowAny,)
@@ -35,6 +36,7 @@ class IngredientViewSet(ModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
+    '''Представление для работы с рецептами.'''
     queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -153,6 +155,7 @@ class RecipeViewSet(ModelViewSet):
 
 
 class TagViewSet(ModelViewSet):
+    '''Представление для работы с тегами.'''
     queryset = Tag.objects.all()
     http_method_names = ['get',]
     serializer_class = TagSerializer
