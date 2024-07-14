@@ -21,7 +21,7 @@ class MyUser(AbstractUser):
         blank=False,
         help_text=('Не более 150 символов. Только буквы,  '
                    'цифры и @/./+/-/_'),
-        validators=[UnicodeUsernameValidator(),],
+        validators=[UnicodeUsernameValidator(), ],
         error_messages={
             'unique': 'Пользователь с таким именем уже существует.',
         },

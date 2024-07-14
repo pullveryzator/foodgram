@@ -27,7 +27,7 @@ from .serializers import (IngredientSerializer, RecipeReadSerializer,
 class IngredientViewSet(ModelViewSet):
     '''Представление для работы с ингредиентами.'''
     queryset = Ingredient.objects.all()
-    http_method_names = ['get',]
+    http_method_names = ['get', ]
     permission_classes = (AllowAny,)
     pagination_class = None
     serializer_class = IngredientSerializer
@@ -60,7 +60,7 @@ class RecipeViewSet(ModelViewSet):
         return super().get_permissions()
 
     @action(
-        methods=['get',],
+        methods=['get', ],
         detail=True,
         url_path='get-link',
         url_name='get-link',
@@ -78,7 +78,7 @@ class RecipeViewSet(ModelViewSet):
         return Response({"short-link": short_link}, status=HTTP_200_OK)
 
     @action(
-        methods=['post', 'delete',],
+        methods=['post', 'delete', ],
         detail=True,
     )
     def shopping_cart(self, request, pk=None):
@@ -88,7 +88,7 @@ class RecipeViewSet(ModelViewSet):
             return self.delete_recipe_from(ShoppingCart, request.user, pk)
 
     @action(
-        methods=['post', 'delete',],
+        methods=['post', 'delete', ],
         detail=True,
     )
     def favorite(self, request, pk=None):
@@ -124,9 +124,9 @@ class RecipeViewSet(ModelViewSet):
         return Response(status=HTTP_204_NO_CONTENT)
 
     @action(
-        methods=['get',],
+        methods=['get', ],
         detail=False,
-        permission_classes=[CurrentUserOrAdmin,]
+        permission_classes=[CurrentUserOrAdmin, ]
     )
     def download_shopping_cart(self, request):
         user = request.user
@@ -157,7 +157,7 @@ class RecipeViewSet(ModelViewSet):
 class TagViewSet(ModelViewSet):
     '''Представление для работы с тегами.'''
     queryset = Tag.objects.all()
-    http_method_names = ['get',]
+    http_method_names = ['get', ]
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
     pagination_class = None
