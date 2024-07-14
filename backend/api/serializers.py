@@ -55,7 +55,7 @@ class RecipeReadSerializer(ModelSerializer):
     ingredients = IngredientForRecipeReadSerializer(many=True, read_only=True)
     is_favorited = SerializerMethodField(read_only=True)
     is_in_shopping_cart = SerializerMethodField(read_only=True)
-    image = Base64ImageField(required=True)
+    image = Base64ImageField()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
@@ -85,13 +85,12 @@ class RecipeRecordSerializer(ModelSerializer):
     author = MyUserSerializer(read_only=True)
     ingredients = IngredientForRecipeRecordSerializer(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
-    image = Base64ImageField(required=True)
+    image = Base64ImageField()
 
     def validate(self, data):
         request_method = self.context['request'].method
         required_fields = (
-            'ingredients', 'tags',
-            'image', 'name',
+            'ingredients', 'tags', 'name',
             'text', 'cooking_time'
         )
         if request_method in ('PATCH', 'POST'):
@@ -173,6 +172,7 @@ class RecipeRecordSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
+        instance = super().update(instance, validated_data)
         instance.tags.clear()
         instance.tags.set(tags)
         instance.ingredients.clear()
