@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from .constants import DEFAULT_PAGE_SIZE
 from .debug_flag import debug_flag
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -163,4 +164,4 @@ MEDIA_ROOT = '/media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-PAGE_SIZE = 6
+PAGE_SIZE = DEFAULT_PAGE_SIZE
