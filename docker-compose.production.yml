@@ -23,6 +23,7 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
+      - ./frontend/:/app/result_build/
   gateway:
     image: pullveryzator/foodgram_gateway
     env_file: .env
@@ -31,3 +32,5 @@ services:
     volumes:
       - static:/staticfiles
       - media:/media
+      - ./frontend/build:/usr/share/nginx/html/
+      - ./docs/:/usr/share/nginx/html/api/docs/

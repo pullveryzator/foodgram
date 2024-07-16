@@ -5,6 +5,10 @@
 
 Foodgram — это веб-приложение для обмена рецептами, где пользователи могут публиковать свои рецепты, просматривать рецепты других пользователей, добавлять рецепты в избранное и составлять список покупок.
 
+- Проект доступен по адресу: https://fudgram.zapto.org
+- API проекта: https://fudgram.zapto.org/api/
+- Документация в формате redoc: https://fudgram.zapto.org/api/docs/
+
 ## Оглавление
 
 - [Описание](#описание)
@@ -114,6 +118,6 @@ Foodgram позволяет пользователям делиться свои
 Если у вас есть вопросы или предложения, пожалуйста, свяжитесь со мной:
 
 - Email: madlion@mail.ru
-- GitHub: [pullveryzator]https://github.com/pullveryzator/
+- GitHub: https://github.com/pullveryzator/
 
 ---
