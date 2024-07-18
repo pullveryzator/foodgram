@@ -17,6 +17,7 @@ class IngredientForRecipeReadSerializer(ModelSerializer):
     amount = SerializerMethodField(read_only=True)
 
     def get_amount(self, obj):
+        """Получение количества ингредиента в рецепте."""
         amount = obj.ingredients_list.last().amount
         return amount
 
@@ -60,12 +61,14 @@ class RecipeReadSerializer(ModelSerializer):
     image = Base64ImageField()
 
     def get_is_in_shopping_cart(self, obj):
+        """Получение признака того, что рецепт в корзине покупок."""
         user = self.context.get('request').user
         return (user.is_authenticated and ShoppingCart.objects.filter(
             user=user, recipes=obj).exists()
         )
 
     def get_is_favorited(self, obj):
+        """Получение признака того, что рецепт в избранном."""
         user = self.context.get('request').user
         return (user.is_authenticated and Favorite.objects.filter(
             user=user, recipes=obj).exists()
@@ -90,6 +93,7 @@ class RecipeRecordSerializer(ModelSerializer):
     image = Base64ImageField()
 
     def validate(self, data):
+        """Валидатор для проверки наличия обязательных полей в запросе."""
         request_method = self.context['request'].method
         required_fields = (
             'ingredients', 'tags', 'name',
@@ -105,6 +109,7 @@ class RecipeRecordSerializer(ModelSerializer):
             return data
 
     def validate_image(self, value):
+        """Валидатор для поля image."""
         if not value:
             raise ValidationError(
                 message='Поле image не может быть пустым.',
@@ -113,6 +118,7 @@ class RecipeRecordSerializer(ModelSerializer):
         return value
 
     def validate_tags(self, value):
+        """Валидатор для поля tags."""
         tags = value
         if not tags:
             raise ValidationError(
@@ -127,6 +133,7 @@ class RecipeRecordSerializer(ModelSerializer):
         return value
 
     def validate_ingredients(self, value):
+        """Валидатор для поля ingredients."""
         ingredients = value
         for ingredient in ingredients:
             object = Ingredient.objects.filter(id=ingredient['id'])
@@ -150,6 +157,7 @@ class RecipeRecordSerializer(ModelSerializer):
 
     @atomic
     def create_ingredients_in_recipe(self, ingredients, recipe):
+        """Функция создания объектов IngredientInRecipe."""
         IngredientInRecipe.objects.bulk_create([
             IngredientInRecipe(
                 ingredient=Ingredient.objects.get(id=ingredient['id']),
@@ -161,6 +169,7 @@ class RecipeRecordSerializer(ModelSerializer):
 
     @atomic
     def create(self, validated_data):
+        """Функция создания объекта рецепта."""
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
@@ -173,6 +182,7 @@ class RecipeRecordSerializer(ModelSerializer):
 
     @atomic
     def update(self, instance, validated_data):
+        """Функция редактирования объекта рецепта."""
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         instance = super().update(instance, validated_data)
@@ -187,6 +197,7 @@ class RecipeRecordSerializer(ModelSerializer):
         return instance
 
     def to_representation(self, instance):
+        """Переопределение вcтроенного метода to_representation."""
         request = self.context.get('request')
         context = {'request': request}
         return RecipeReadSerializer(instance, context=context).data

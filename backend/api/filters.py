@@ -5,6 +5,7 @@ from recipes.models import Ingredient, Recipe, Tag
 
 
 class RecipeFilter(FilterSet):
+    """Кастомный фильтр для рецептов."""
 
     author = CharFilter()
     tags = ModelMultipleChoiceFilter(
@@ -32,6 +33,7 @@ class RecipeFilter(FilterSet):
 
 
 class IngredientFilter(FilterSet):
+    """Кастомный фильтр для ингредиентов."""
     name = CharFilter(lookup_expr='startswith')
 
     class Meta:

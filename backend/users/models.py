@@ -8,6 +8,7 @@ from .constants import (EMAIL_MAX_LENGTH, FIRST_NAME_MAX_LENGTH,
 
 
 class MyUser(AbstractUser):
+    """Кастомная модель пользователя."""
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
         'username',
@@ -59,6 +60,7 @@ class MyUser(AbstractUser):
 
 
 class Subscribe(models.Model):
+    """Модель подписки."""
     user = models.ForeignKey(
         MyUser, on_delete=models.CASCADE,
         related_name='subscriber',

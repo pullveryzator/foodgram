@@ -9,6 +9,7 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
+    """Модель ингредиент."""
     name = models.CharField(
         'Название',
         unique=True,
@@ -29,6 +30,7 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
+    """Модель тег."""
     name = models.CharField(
         'Название',
         unique=True,
@@ -49,6 +51,7 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
+    """Модель рецепт."""
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
@@ -100,6 +103,7 @@ class Recipe(models.Model):
 
 
 class IngredientInRecipe(models.Model):
+    """Промежуточная модель для ингредиента в рецепте."""
     ingredient = models.ForeignKey(
         Ingredient,
         related_name='ingredients_list',
@@ -135,6 +139,7 @@ class IngredientInRecipe(models.Model):
 
 
 class Favorite(models.Model):
+    """Модель избранное."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -163,6 +168,7 @@ class Favorite(models.Model):
 
 
 class ShoppingCart(models.Model):
+    """Модель корзина покупок."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
