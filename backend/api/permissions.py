@@ -28,4 +28,4 @@ class CurrentUserOrAdminOrReadOnly(IsAuthenticatedOrReadOnly):
 class CurrentUserOrAdmin(IsAuthenticated):
 
     def has_object_permission(self, request, view, obj):
-        return (request.user.is_staff or obj.author == request.user)
+        return request.user.is_staff or obj.author == request.user

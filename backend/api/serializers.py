@@ -1,17 +1,19 @@
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
-from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import status
 from rest_framework.fields import IntegerField, SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
+
+from drf_extra_fields.fields import Base64ImageField
+
+from recipes.models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
+                            ShoppingCart, Tag)
 from users.serializers import MyUserSerializer
 
 
 class IngredientForRecipeReadSerializer(ModelSerializer):
-    '''Сериализатор для чтения отдельного ингредиента в рецепте.'''
+    """Сериализатор для чтения отдельного ингредиента в рецепте."""
     amount = SerializerMethodField(read_only=True)
 
     def get_amount(self, obj):
@@ -24,7 +26,7 @@ class IngredientForRecipeReadSerializer(ModelSerializer):
 
 
 class IngredientForRecipeRecordSerializer(ModelSerializer):
-    '''Сериализатор для записи отдельного ингредиента в рецепт.'''
+    """Сериализатор для записи отдельного ингредиента в рецепт."""
     id = IntegerField(write_only=True)
 
     class Meta:
@@ -33,7 +35,7 @@ class IngredientForRecipeRecordSerializer(ModelSerializer):
 
 
 class IngredientSerializer(ModelSerializer):
-    '''Базовый сериализатор для ингредиентов.'''
+    """Базовый сериализатор для ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -41,7 +43,7 @@ class IngredientSerializer(ModelSerializer):
 
 
 class TagSerializer(ModelSerializer):
-    '''Сериализатор для тегов.'''
+    """Сериализатор для тегов."""
 
     class Meta:
         model = Tag
@@ -49,7 +51,7 @@ class TagSerializer(ModelSerializer):
 
 
 class RecipeReadSerializer(ModelSerializer):
-    '''Сериализатор для чтения рецептов.'''
+    """Сериализатор для чтения рецептов."""
     tags = TagSerializer(many=True, read_only=True)
     author = MyUserSerializer(read_only=True)
     ingredients = IngredientForRecipeReadSerializer(many=True, read_only=True)
@@ -81,7 +83,7 @@ class RecipeReadSerializer(ModelSerializer):
 
 
 class RecipeRecordSerializer(ModelSerializer):
-    '''Сериализатор для записи рецептов.'''
+    """Сериализатор для записи рецептов."""
     author = MyUserSerializer(read_only=True)
     ingredients = IngredientForRecipeRecordSerializer(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
@@ -148,13 +150,14 @@ class RecipeRecordSerializer(ModelSerializer):
 
     @atomic
     def create_ingredients_in_recipe(self, ingredients, recipe):
-        for ingredient in ingredients:
-            value = Ingredient.objects.filter(id=ingredient['id'])
-            IngredientInRecipe.objects.create(
-                ingredient=value.get(id=ingredient['id']),
+        IngredientInRecipe.objects.bulk_create([
+            IngredientInRecipe(
+                ingredient=Ingredient.objects.get(id=ingredient['id']),
                 recipe=recipe,
                 amount=ingredient['amount']
             )
+            for ingredient in ingredients
+        ])
 
     @atomic
     def create(self, validated_data):
@@ -198,7 +201,7 @@ class RecipeRecordSerializer(ModelSerializer):
 
 
 class RecipeSimpleSerializer(ModelSerializer):
-    '''Базовый сериализатор для рецептов.'''
+    """Базовый сериализатор для рецептов."""
 
     class Meta:
         model = Recipe

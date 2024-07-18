@@ -1,13 +1,9 @@
-from io import BytesIO
-
-from api.filters import IngredientFilter, RecipeFilter
 from django.db.models import Sum
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import baseconv
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -17,15 +13,18 @@ from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from api.filters import IngredientFilter, RecipeFilter
+from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
 from .pagination import CustomPagination
 from .permissions import CurrentUserOrAdmin, CurrentUserOrAdminOrReadOnly
 from .serializers import (IngredientSerializer, RecipeReadSerializer,
                           RecipeRecordSerializer, RecipeSimpleSerializer,
                           TagSerializer)
+from .utils import create_shopping_list_file
 
 
 class IngredientViewSet(ModelViewSet):
-    '''Представление для работы с ингредиентами.'''
+    """Представление для работы с ингредиентами."""
     queryset = Ingredient.objects.all()
     http_method_names = ['get', ]
     permission_classes = (AllowAny,)
@@ -36,7 +35,7 @@ class IngredientViewSet(ModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
-    '''Представление для работы с рецептами.'''
+    """Представление для работы с рецептами."""
     queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -84,8 +83,7 @@ class RecipeViewSet(ModelViewSet):
     def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
             return self.add_recipe_to(ShoppingCart, request.user, pk)
-        else:
-            return self.delete_recipe_from(ShoppingCart, request.user, pk)
+        return self.delete_recipe_from(ShoppingCart, request.user, pk)
 
     @action(
         methods=['post', 'delete', ],
@@ -94,8 +92,7 @@ class RecipeViewSet(ModelViewSet):
     def favorite(self, request, pk=None):
         if request.method == 'POST':
             return self.add_recipe_to(Favorite, request.user, pk)
-        else:
-            return self.delete_recipe_from(Favorite, request.user, pk)
+        return self.delete_recipe_from(Favorite, request.user, pk)
 
     def add_recipe_to(self, model, user, pk):
         if model.objects.filter(user=user, recipes_id=pk).exists():
@@ -137,15 +134,7 @@ class RecipeViewSet(ModelViewSet):
                     amount=Sum('recipes__ingredients_list__amount')).order_by(
                         'recipes__ingredients__name'
         )
-        file = BytesIO()
-        for ingredient in shopping_cart:
-            file.write(
-                f"{ingredient['recipes__ingredients__name']}: "
-                f"{ingredient['amount']} "
-                f"{ingredient['recipes__ingredients__measurement_unit']}\n"
-                .encode('utf-8')
-            )
-        file.seek(0)
+        file = create_shopping_list_file(shopping_cart)
         return FileResponse(
             file,
             content_type='text/plain',
@@ -155,7 +144,7 @@ class RecipeViewSet(ModelViewSet):
 
 
 class TagViewSet(ModelViewSet):
-    '''Представление для работы с тегами.'''
+    """Представление для работы с тегами."""
     queryset = Tag.objects.all()
     http_method_names = ['get', ]
     serializer_class = TagSerializer
@@ -164,7 +153,7 @@ class TagViewSet(ModelViewSet):
 
 
 class ShortLinkView(APIView):
-    '''Представление для работы с короткой ссылкой.'''
+    """Представление для работы с короткой ссылкой."""
     permission_classes = (AllowAny,)
 
     def get(self, request, encoded_id):

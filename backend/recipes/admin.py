@@ -1,27 +1,32 @@
 from django.contrib import admin
 
-from .constants import LIST_PER_PAGE
+from .constants import LIST_PER_PAGE, MIN_AMOUNT_OF_INGREDIENT
 from .models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
                      ShoppingCart, Tag)
 
 
 class IngredientInline(admin.TabularInline):
+    min_num = MIN_AMOUNT_OF_INGREDIENT
     model = IngredientInRecipe
 
 
-class IngredientAdmin(admin.ModelAdmin):
+class CommonRecipesAdmin(admin.ModelAdmin):
+    """Общий класс для админки приложения recipes."""
+    list_per_page = LIST_PER_PAGE
+
+
+class IngredientAdmin(CommonRecipesAdmin):
 
     list_display = (
         'name',
         'measurement_unit',
     )
     search_fields = ('name',)
-    list_per_page = LIST_PER_PAGE
     list_display_links = ('name',)
     inlines = (IngredientInline,)
 
 
-class FavoriteAdmin(admin.ModelAdmin):
+class FavoriteAdmin(CommonRecipesAdmin):
 
     list_display = (
         'user',
@@ -29,7 +34,7 @@ class FavoriteAdmin(admin.ModelAdmin):
     )
 
 
-class ShoppingCartAdmin(admin.ModelAdmin):
+class ShoppingCartAdmin(CommonRecipesAdmin):
 
     list_display = (
         'user',
@@ -37,7 +42,7 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     )
 
 
-class RecipeAdmin(admin.ModelAdmin):
+class RecipeAdmin(CommonRecipesAdmin):
     list_display = (
         'name',
         'author',
@@ -48,19 +53,22 @@ class RecipeAdmin(admin.ModelAdmin):
     def count_in_favorite(self, obj):
         return Favorite.objects.filter(recipes=obj).count()
     count_in_favorite.short_description = 'раз в избранном'
-    search_fields = ('name', 'author',)
+
+    search_fields = (
+        'name', 'author__username',
+        'author__email', 'tags__name',
+        'tags__slug',
+    )
     list_filter = ('tags',)
-    list_per_page = LIST_PER_PAGE
     list_display_links = ('name',)
     inlines = (IngredientInline,)
 
 
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(CommonRecipesAdmin):
     list_display = (
         'name',
         'slug',
     )
-    list_per_page = LIST_PER_PAGE
     list_display_links = ('name',)
 
 
