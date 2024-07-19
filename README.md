@@ -60,7 +60,6 @@ Foodgram позволяет пользователям делиться свои
 
 2. Создайте файл `.env` в корневой директории проекта и добавьте необходимые переменные окружения:
 
-    env  
     SECRET_KEY=your_secret_key  
     DEBUG=True  
     ALLOWED_HOSTS=localhost, 127.0.0.1  
