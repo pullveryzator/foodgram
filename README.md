@@ -84,7 +84,7 @@ Foodgram позволяет пользователям делиться свои
 
 5. Создайте суперпользователя для доступа к административной панели:
 
-- docker-compose exec web python manage.py createsuperuser
+- docker-compose exec foodgram-backend-1 python manage.py createsuperuser
     
 
 6. Откройте браузер и перейдите по адресу `http://localhost/` для доступа к приложению.
