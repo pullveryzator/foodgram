@@ -6,11 +6,11 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST)
-from users.models import Subscribe
 
 from .permissions import CurrentUserOrAdmin
 from .serializers import (AvatarSerializer, MyUserSerializer,
                           SubscribeSerializer)
+from users.models import Subscribe
 
 User = get_user_model()
 

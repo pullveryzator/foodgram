@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.fields import IntegerField, SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
-
 from drf_extra_fields.fields import Base64ImageField
 
 from recipes.models import (Favorite, Ingredient, IngredientInRecipe, Recipe,
@@ -160,7 +159,7 @@ class RecipeRecordSerializer(ModelSerializer):
         """Функция создания объектов IngredientInRecipe."""
         IngredientInRecipe.objects.bulk_create([
             IngredientInRecipe(
-                ingredient=Ingredient.objects.get(id=ingredient['id']),
+                ingredient_id=ingredient['id'],
                 recipe=recipe,
                 amount=ingredient['amount']
             )

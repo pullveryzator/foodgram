@@ -20,7 +20,7 @@ class MyUser(AbstractUser):
         max_length=USERNAME_MAX_LENGTH,
         unique=True,
         blank=False,
-        help_text=('Не более 150 символов. Только буквы,  '
+        help_text=(f'Не более {USERNAME_MAX_LENGTH} символов. Только буквы,  '
                    'цифры и @/./+/-/_'),
         validators=[UnicodeUsernameValidator(), ],
         error_messages={

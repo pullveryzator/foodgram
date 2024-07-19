@@ -32,5 +32,5 @@ services:
     volumes:
       - static:/staticfiles
       - media:/media
-      # - ./frontend/build:/usr/share/nginx/html/
-      # - ./docs/:/usr/share/nginx/html/api/docs/
+      - ./frontend/build:/usr/share/nginx/html/
+      - ./docs/:/usr/share/nginx/html/api/docs/
