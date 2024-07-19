@@ -31,3 +31,4 @@ services:
     volumes:
       - static:/staticfiles
       - media:/media
+      - ./app/api/docs/:/usr/share/nginx/html/api/docs/
