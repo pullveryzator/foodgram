@@ -27,7 +27,6 @@ services:
   gateway:
     env_file: .env
     image: pullveryzator/foodgram_gateway
-    command: cp -r /app/docs/. /staticfiles/
     ports:
       - 9500:80
     volumes:
