@@ -7,7 +7,7 @@ Foodgram — это веб-приложение для обмена рецепт
 
 - Проект доступен по адресу: https://fudgram.zapto.org
 - API проекта: https://fudgram.zapto.org/api/
-- Документация в формате redoc: https://fudgram.zapto.org/api/docs/
+- Документация в формате redoc: https://fudgram.zapto.org/api/docs/redoc.html
 
 ## Оглавление
 
