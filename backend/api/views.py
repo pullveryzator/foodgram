@@ -100,7 +100,7 @@ class RecipeViewSet(ModelViewSet):
         return self.delete_recipe_from(Favorite, request.user, pk)
 
     def add_recipe_to(self, model, user, pk):
-        """Фукция добавления рецепта в объект модели."""
+        """Функция добавления рецепта в объект модели."""
         if model.objects.filter(user=user, recipes_id=pk).exists():
             return Response(
                 {'errors': f'Рецепт {pk} в {model.__name__} уже добавлен.'},
@@ -112,7 +112,7 @@ class RecipeViewSet(ModelViewSet):
         return Response(serializer.data, status=HTTP_201_CREATED)
 
     def delete_recipe_from(self, model, user, pk):
-        """Фукция удаления рецепта из объекта модели."""
+        """Функция удаления рецепта из объекта модели."""
         if not Recipe.objects.filter(pk=pk).exists():
             return Response(
                 {'errors': f'Рецепта {pk} в базе данных не cуществует.'},
@@ -133,7 +133,7 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=[CurrentUserOrAdmin, ]
     )
     def download_shopping_cart(self, request):
-        """Функия для работы с загрузкой файла списка покупок."""
+        """Функция для работы с загрузкой файла списка покупок."""
         user = request.user
         shopping_cart = ShoppingCart.objects.filter(
             user=user).values(
