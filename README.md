@@ -87,7 +87,7 @@ Foodgram позволяет пользователям делиться свои
 - docker-compose exec foodgram-backend-1 python manage.py createsuperuser
     
 
-6. Откройте браузер и перейдите по адресу `http://localhost/` для доступа к приложению.
+6. Откройте браузер и перейдите по адресу `http://localhost:8000/` для доступа к приложению.
 
 ## Использование
 
