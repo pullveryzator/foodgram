@@ -27,7 +27,7 @@ services:
     env_file: .env
     image: pullveryzator/foodgram_gateway
     ports:
-      - 9500:80
+      - 8000:80
     volumes:
       - static:/staticfiles
       - media:/media
