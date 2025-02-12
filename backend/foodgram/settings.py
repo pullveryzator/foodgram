@@ -16,7 +16,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['fudgram.zapto.org', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    'getfoodgram.zapto.org', '127.0.0.1', 'localhost', '94.142.139.148']
 
 AUTH_USER_MODEL = 'users.MyUser'
 
