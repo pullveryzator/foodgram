@@ -77,6 +77,7 @@ Foodgram позволяет пользователям делиться свои
 
 4. Выполните миграции, соберите статику и импортируйте ингредиенты из backend/data/ingredients.csv:
 
+- docker-compose exec foodgram-backend-1 python manage.py makemigrations
 - docker-compose exec foodgram-backend-1 python manage.py migrate
 - docker-compose exec foodgram-backend-1 python manage.py collectstatic
 - docker-compose exec foodgram-backend-1 python manage.py import
