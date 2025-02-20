@@ -43,6 +43,7 @@ Foodgram позволяет пользователям делиться свои
 - Gunicorn
 - JavaScript
 - HTML/CSS
+- React
 
 ## Установка
 
