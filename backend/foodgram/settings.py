@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '')
 DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    'getfoodgram.zapto.org', '127.0.0.1', 'localhost', '94.142.139.148']
+    'greatfood.zapto.org', '127.0.0.1', 'localhost', '94.142.139.148']
 
 AUTH_USER_MODEL = 'users.MyUser'
 
