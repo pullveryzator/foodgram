@@ -5,9 +5,9 @@
 
 Foodgram — это веб-приложение для обмена рецептами, где пользователи могут публиковать свои рецепты, просматривать рецепты других пользователей, добавлять рецепты в избранное и составлять список покупок.
 
-- Проект доступен по адресу: https://getfoodgram.zapto.org
-- API проекта: https://getfoodgram.zapto.org/api/
-- Документация в формате redoc: https://getfoodgram.zapto.org/api/docs/redoc.html
+- Проект доступен по адресу: https://greatfood.zapto.org
+- API проекта: https://greatfood.zapto.org/api/
+- Документация в формате redoc: https://greatfood.zapto.org/api/docs/redoc.html
   
 ## Оглавление
 
