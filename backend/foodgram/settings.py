@@ -165,3 +165,8 @@ MEDIA_ROOT = '/media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PAGE_SIZE = DEFAULT_PAGE_SIZE
+
+CORS_ALLOWED_ORIGINS = [
+    "https://greatfood.zapto.org",
+    "https://94.142.139.148",
+]
