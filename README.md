@@ -78,15 +78,15 @@ Foodgram позволяет пользователям делиться свои
 
 4. Выполните миграции, соберите статику и импортируйте ингредиенты из backend/data/ingredients.csv:
 
-- docker-compose exec foodgram-backend-1 python manage.py makemigrations
-- docker-compose exec foodgram-backend-1 python manage.py migrate
-- docker-compose exec foodgram-backend-1 python manage.py collectstatic
-- docker-compose exec foodgram-backend-1 python manage.py import
+- docker-compose exec backend python manage.py makemigrations
+- docker-compose exec backend python manage.py migrate
+- docker-compose exec backend python manage.py collectstatic
+- docker-compose exec backend python manage.py import
     
 
 5. Создайте суперпользователя для доступа к административной панели:
 
-- docker-compose exec foodgram-backend-1 python manage.py createsuperuser
+- docker-compose exec backend python manage.py createsuperuser
     
 
 6. Откройте браузер и перейдите по адресу `http://localhost:8000/` для доступа к приложению.
